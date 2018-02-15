@@ -13,13 +13,41 @@ const jsFrameworks = document.querySelector("input[name = 'js-frameworks']");
 const jsLibs = document.querySelector("input[name = 'js-libs']");
 const express = document.querySelector("input[name = 'express']");
 const node = document.querySelector("input[name = 'node']");
-
-console.log(email, name);
+const ccNumDiv = document.getElementsByClassName("col-6")[0];
+const zipDiv = document.getElementsByClassName("col-3")[0];
+const cvvDiv = document.getElementsByClassName("col-3")[1];
+const cvv = document.getElementById('cvv');
+const zip = document.getElementById('zip');
+const ccNum = document.getElementById('cc-num');
 
 let price = 0;
 let payOption = 'credit-card';
 const total = document.createElement("h3");
 
+//ADDING ERROR MESSAGE
+
+//Name error messages
+const nameErr = errorMessage("Enter your Name", "nameErr");
+fieldset[0].insertBefore(nameErr, name);
+
+//Email error
+const emailErr = errorMessage("Enter your Email", "emailErr");
+fieldset[0].insertBefore(emailErr, email);
+
+// Card Number error
+const ccNumErr = errorMessage("Enter your card number", "ccNumErr");
+ccNumDiv.appendChild(ccNumErr);
+
+//Zip code error
+const zipErr = errorMessage("Enter your zip", "zipErr");
+zipDiv.appendChild(zipErr);
+
+//Cvv error
+const cvvErr = errorMessage("Enter your cvv", "cvvErr");
+cvvDiv.appendChild(cvvErr);
+
+
+//Looking for jobe role
 jobField.addEventListener("click",() => {
   const option = jobField.options[jobField.selectedIndex].value;
   if(option === "other" && !document.getElementById("other-title")){
@@ -32,16 +60,42 @@ jobField.addEventListener("click",() => {
   }
 });
 
+//Adding t-shirts
 design.addEventListener("change", () => {
   const designOption = design.options[design.selectedIndex].value;
-  const colorOptions = color.options;
-  if(designOption !== "Select Theme") {
-    colorDiv.style.display = "";
-    for(let i = 0; i < colorOptions.length; i++) {
-      (designOption === colorOptions[i].className)? colorOptions[i].style.display = "" : colorOptions[i].style.display = "none";
-    }
-  } else {
+  const length = color.children.length;
+  let option1;
+  let option2;
+  let option3;
+  for(let i = 0; i < length; i++){
+    color.removeChild(color.children[0]);
+  }
+  if(designOption === "js puns") {
+     option1 = createElement("option","Cornflower Blue");
+     option1.value = "cornflowerblue";
+
+     option2 = createElement("option","Dark Slate Grey");
+     option2.value = "darkslategrey";
+
+     option3 = createElement("option","Gold");
+     option3.value = "gold";
+  }
+   else if(designOption === "heart js") {
+       option1 = createElement("option","Tomato");
+       option1.value = "tomato";
+
+       option2 = createElement("option","Steel BLue");
+       option2.value = "steelblue";
+
+       option3 = createElement("option","Dimgrey");
+       option3.value = "dimgrey";
+  }
+  if( designOption === "select") {
     colorDiv.style.display = "none";
+  } else { colorDiv.style.display = "";
+    color.appendChild(option1);
+    color.appendChild(option2);
+    color.appendChild(option3);
   }
 });
 
@@ -66,7 +120,7 @@ activities.addEventListener("change", e => {
   if(price !== 0) total.innerHTML = `Total: $${price}`
    else total.innerHTML = `You haven't choose any activities. Please select one.`;
    total.style.color = "black";
-  activities.appendChild(total);
+   activities.appendChild(total);
 });
 
 payment.addEventListener("change", e => {
@@ -75,6 +129,42 @@ payment.addEventListener("change", e => {
   Array.prototype.forEach.call(payMethod, option => {
     (option.id === payOption)? option.style.display = "": option.style.display = "none";
   });
+});
+
+ccNum.style.borderColor = 'transparent';
+zip.style.borderColor = 'transparent';
+cvv.style.borderColor = 'transparent';
+
+ccNum.addEventListener("change", e => {
+    if (e.target.value.length > 17 || ccNum.value.length < 13 || ccNum.value.match(/^[0-9]+$/) == null) {
+        ccNum.style.borderColor = 'red';
+    }
+    else {
+      e.target.style.borderColor ="green";
+      ccNumErr.style.display =  "none";
+    }
+});
+
+
+zip.addEventListener("change", e => {
+    if (zip.value.length !== 5 || zip.value.match(/^[0-9]+$/) == null) {
+        zip.style.borderColor = 'red';
+    }
+    else {
+      e.target.style.borderColor ="green";
+      zipErr.style.display =  "none";
+    }
+});
+
+
+cvv.addEventListener("change", e => {
+    if (cvv.value.length !== 3 || cvv.value.match(/^[0-9]+$/) == null) {
+        cvv.style.borderColor = 'red';
+    }
+    else {
+      e.target.style.borderColor ="green";
+      cvvErr.style.display =  "none";
+    }
 });
 
 button.addEventListener("click", e => {
@@ -86,13 +176,14 @@ button.addEventListener("click", e => {
     //making names border red to indicate that the you need to fill in a name
     if (name.value == '') {
         name.style.borderColor = 'red';
+        nameErr.style.display = "";
         e.preventDefault();
     }
 
     let sub = "@";
     if (email.value.indexOf(sub) === -1) {
         email.style.borderColor = 'red';
-        email.a
+        emailErr.style.display = "";
         e.preventDefault();
     }
 
@@ -106,37 +197,39 @@ button.addEventListener("click", e => {
         //i use prevent default on every if statement so the submit button dosent actully submit and instead makes the statements that i say it should
     }
 
-    if (payOption === "select_method") {
-      const payError = document.createElement("h3");
-      payError.innerHTML = "You need to select one payment method";
-      payError.style.color = "red";
-      fieldset[fieldset.length-1].appendChild(payError);
-      e.preventDefault();
-    }
-    else if (payOption === "credit-card") {
-      const cvv = document.getElementById('cvv');
-      const zip = document.getElementById('zip');
-      const ccNum = document.getElementById('cc-num');
-
-      ccNum.style.borderColor = 'transparent';
-        zip.style.borderColor = 'transparent';
-        cvv.style.borderColor = 'transparent';
-
+     if (payOption === "credit-card") {
         if (ccNum.value.length > 17 || ccNum.value.length < 13 || ccNum.value.match(/^[0-9]+$/) == null) {
             ccNum.style.borderColor = 'red';
-            event.preventDefault();
+            ccNumErr.style.display = "";
+            e.preventDefault();
         }
         if (zip.value.length !== 5 || zip.value.match(/^[0-9]+$/) == null) {
             zip.style.borderColor = 'red';
-            event.preventDefault();
+            zipErr.style.display = "";
+            e.preventDefault();
         }
         if (cvv.value.length !== 3 || cvv.value.match(/^[0-9]+$/) == null) {
             cvv.style.borderColor = 'red';
-            event.preventDefault();
+            cvvErr.style.display = "";
+              e.preventDefault();
         }
+
     }
 });
 
+function errorMessage(inner, id) {
+  const err = createElement("h3", inner);
+  err.id = id;
+  err.style.color = "red";
+  err.style.display = "none";
+  return err;
+}
+
+function createElement(e ,inner) {
+    const element = document.createElement(e);
+    element.innerHTML = inner;
+    return element;
+}
 
 function startFocus() {
   name.focus();
