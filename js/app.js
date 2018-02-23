@@ -19,9 +19,12 @@ const cvvDiv = document.getElementsByClassName("col-3")[1];
 const cvv = document.getElementById('cvv');
 const zip = document.getElementById('zip');
 const ccNum = document.getElementById('cc-num');
+const other = document.getElementById("other");
+
+other.style.display = "none";
 
 let price = 0;
-let payOption = 'credit-card';
+let payOption = '';
 const total = document.createElement("h3");
 
 //ADDING ERROR MESSAGE
@@ -47,17 +50,15 @@ const cvvErr = errorMessage("Enter your cvv", "cvvErr");
 cvvDiv.appendChild(cvvErr);
 
 
+const payErr = errorMessage("Choose one payment method", "payErr");
+fieldset[fieldset.length-1].appendChild(payErr);
+
 //Looking for jobe role
 jobField.addEventListener("click",() => {
   const option = jobField.options[jobField.selectedIndex].value;
   if(option === "other" && !document.getElementById("other-title")){
-    const other = document.createElement("input");
-    other.type = "text";
-    other.id = "other-title";
-    other.name = "job-role";
-    other.placeholder = "Your Job Role";
-    fieldset[0].appendChild(other);
-  }
+    other.style.display = "";
+  } else {other.style.display = "none";}
 });
 
 //Adding t-shirts
@@ -213,7 +214,9 @@ button.addEventListener("click", e => {
             cvvErr.style.display = "";
               e.preventDefault();
         }
-
+    }
+    if(payOption === "") {
+      payErr.style.display = "";
     }
 });
 
@@ -236,6 +239,7 @@ function startFocus() {
   colorDiv.style.display = "none";
   document.getElementById("paypal").style.display="none";
   document.getElementById("bitcoin").style.display="none";
+  document.getElementById("credit-card").style.display = "none";
 }
 
 startFocus();
