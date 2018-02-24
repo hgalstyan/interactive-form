@@ -54,7 +54,7 @@ const payErr = errorMessage("Choose one payment method", "payErr");
 fieldset[fieldset.length-1].appendChild(payErr);
 
 //Looking for jobe role
-jobField.addEventListener("click",() => {
+jobField.addEventListener("change",() => {
   const option = jobField.options[jobField.selectedIndex].value;
   if(option === "other" && !document.getElementById("other-title")){
     other.style.display = "";
